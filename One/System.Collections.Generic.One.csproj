@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>System.Collections.Generic.One</PackageId>
+    <Authors>Ronny Gunawan</Authors>
+    <Company>Ronny Gunawan</Company>
+    <Product>System.Collections.Generic.One</Product>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RootNamespace>System.Collections.Generic</RootNamespace>
+  </PropertyGroup>
+
+</Project>
