@@ -67,7 +67,7 @@ int result = from x in (await GetValue1Async()).ToOne()
              select x * y;
 ```
 
-# Auto-disposing Range Variables
+# Auto Disposing Range Variables
 All disposable range variables are automatically disposed on select.
 ```csharp
 string ComputeSecretProof(string accessToken) {
@@ -82,3 +82,19 @@ string ComputeSecretProof(string accessToken) {
 }
                      
 ```
+
+# Disabling Auto Dispose
+```csharp
+string json = await (Task<string>) from client in httpClient.ToOne(doNotDisposeValueOnDispose: true)
+                                   let uri = new Uri(uriString)
+                                   let jwtToken = ...
+                                   ...
+                                   select client.GetStringAsync(uri);
+// httpClient is not be disposed and can still be reused
+```
+
+# Planned Features
+1. join .. into .. clause
+2. async let
+
+Please submit an issue if you need to report bugs or request a feature.
