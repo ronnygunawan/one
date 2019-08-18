@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Tests {
@@ -58,6 +59,21 @@ namespace Tests {
 								   });
 
 			decryptedText.Should().Be(plainText);
+		}
+
+		[Fact]
+		public async void ClosureCanHaveMultipleAwaits() {
+			string s1 = "HeLLo wOrld";
+			string s2 = "hEllo World";
+
+			bool areEqual = from normalizedS1 in (await ToUpperAsync(s1)).ToOne()
+							join normalizedS2 in (await ToUpperAsync(s2)).ToOne() on 1 equals 1
+							select normalizedS1 == normalizedS2;
+			areEqual.Should().BeTrue();
+		}
+
+		private static Task<string> ToUpperAsync(string s) {
+			return Task.FromResult(s.ToUpper());
 		}
 	}
 }
