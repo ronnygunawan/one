@@ -13,10 +13,11 @@
     <Description>One&lt;T&gt; is a generic collection that contains exactly one item. This kind of generic collection allows you to use LINQ expression to write closures and functional programming.</Description>
     <PackageProjectUrl>https://github.com/ronnygunawan/one</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ronnygunawan/one</RepositoryUrl>
-    <PackageTags>one linq closure functional</PackageTags>
+    <PackageTags>one linq closure functional generic collections</PackageTags>
     <PackageLicenseExpression></PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

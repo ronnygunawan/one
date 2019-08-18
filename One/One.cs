@@ -183,8 +183,8 @@ namespace System.Collections.Generic {
 		#endregion
 
 		#region Invalid Linq operators
-		[Obsolete("Second From clause must also enumerate from a One<T>.", error: true)]
-		public One<TResult> SelectMany<TCollection, TResult>(Func<T, IEnumerable<TCollection>> collectionSelector, Func<T, TCollection, TResult> resultSelector) => throw new InvalidOperationException($"Second From clause must also enumerate from a One<T>.");
+		[Obsolete("Second from clause must also enumerate a One<T>.", error: true)]
+		public One<TResult> SelectMany<TCollection, TResult>(Func<T, IEnumerable<TCollection>> collectionSelector, Func<T, TCollection, TResult> resultSelector) => throw new InvalidOperationException($"Second from clause must also enumerate a One<T>.");
 
 		[Obsolete("Where clause is not allowed on One<T>.", error: true)]
 		public One<T> Where(Func<T, bool> predicate) => throw new InvalidOperationException($"Where clause is not allowed on {typeof(One<T>).Name}.");
@@ -198,8 +198,8 @@ namespace System.Collections.Generic {
 		[Obsolete("GroupJoin clause is not allowed on One<T>.", error: true)]
 		public One<TResult> GroupJoin<TInner, TKey, TResult>(One<TInner> inner, Func<T, TKey> outerKeySelector, Func<TInner, TKey> innerKeySelector, Func<T, One<TInner>, TResult> resultSelector) => throw new InvalidOperationException($"GroupJoin clause is not allowed on {typeof(One<T>).Name}.");
 
-		[Obsolete("Join clause must enumerate from a One<T>.", error: true)]
-		public One<TInner> Join<TInner, TKey>(IEnumerable<TInner> inner, Func<T, TKey> outerKeySelector, Func<TInner, TKey> innerKeySelector, Func<T, TInner, T> resultSelector) => throw new InvalidOperationException($"Join clause on {typeof(One<T>).Name} must enumerate from a One<T>.");
+		[Obsolete("Join clause must enumerate a One<T>.", error: true)]
+		public One<TInner> Join<TInner, TKey>(IEnumerable<TInner> inner, Func<T, TKey> outerKeySelector, Func<TInner, TKey> innerKeySelector, Func<T, TInner, T> resultSelector) => throw new InvalidOperationException($"Join clause on {typeof(One<T>).Name} must enumerate a One<T>.");
 
 		[Obsolete("GroupBy clause is not allowed on One<T>.", error: true)]
 		public IEnumerable<IGrouping<TKey, T>> GroupBy<TKey>(Func<T, TKey> keySelector) => throw new InvalidOperationException($"GroupBy clause is not allowed on {typeof(One<T>).Name}.");
