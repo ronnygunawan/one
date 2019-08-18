@@ -8,6 +8,13 @@
     <Product>System.Collections.Generic.One</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RootNamespace>System.Collections.Generic</RootNamespace>
+    <Copyright>(c) 2019 Ronny Gunawan</Copyright>
+    <Description>This package contains One&lt;T&gt;, a collection that contains exactly one item. This kind of collection allows you to use LINQ expression in whole new different ways: write closures, functional methods, auto-dispose objects.</Description>
+    <PackageProjectUrl>https://github.com/ronnygunawan/one</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ronnygunawan/one</RepositoryUrl>
+    <PackageTags>one linq closure functional</PackageTags>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
 </Project>
