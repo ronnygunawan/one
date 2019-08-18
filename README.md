@@ -90,7 +90,7 @@ string json = await (Task<string>) from client in httpClient.ToOne(doNotDisposeV
                                    let jwtToken = ...
                                    ...
                                    select client.GetStringAsync(uri);
-// httpClient is not be disposed and can still be reused
+// httpClient is not disposed and can still be reused
 ```
 
 # Planned Features
