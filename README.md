@@ -42,7 +42,7 @@ decimal total = from price in One.Value(199m)
                 select subtotal + tax - discount;
 ```
 
-# Qlosure: Closures Written in LINQ
+# Qlosure&lt;T&gt;: Closures Written in LINQ
 You can write closures in LINQ by enumerating from a One&lt;T&gt; or a Qlosure&lt;T&gt;.
 
 Start a qlosure
