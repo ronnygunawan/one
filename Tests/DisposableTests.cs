@@ -12,8 +12,8 @@ namespace Tests {
 			DummyResource3 resource3Ref = null;
 			DummyResource4 resource4Ref = null;
 
-			string result = from res1 in resource1.ToOne()
-							join res2 in resource2.ToOne() on 1 equals 1
+			string result = from res1 in One.Value(resource1)
+							from res2 in One.Value(resource2)
 							let res3 = resource3Ref = new DummyResource3("Wkwk")
 							let res4 = resource4Ref = new DummyResource4("Akwoakoawk")
 							let temp = $"{res3.Text} {res4.Text}"

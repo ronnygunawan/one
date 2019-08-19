@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-
-namespace System.Collections.Generic {
+﻿namespace System.Collections.Generic {
 	/// <summary>
 	/// Factory for <see cref="One{T}"./>
 	/// </summary>
@@ -17,20 +13,17 @@ namespace System.Collections.Generic {
 		/// </summary>
 		/// <typeparam name="TValue">The type of value in the instance.</typeparam>
 		/// <param name="value">The value to be stored in the <see cref="One{T}"/>. The value can be null for reference types.</param>
-		/// <param name="doNotDisposeValueOnDispose">true to let <see cref="One{T}"/> dispose value on disposing; false if you prefer to dispose it yourself.</param>
 		/// <returns>A new instance of <see cref="One{T}"/> that contains the specified value.</returns>
-		public static One<TValue> Of<TValue>(TValue value, bool doNotDisposeValueOnDispose = false) => new One<TValue>(value, doNotDisposeValueOnDispose);
+		public static One<TValue> Value<TValue>(TValue value) => new One<TValue>(value);
 	}
 
 	/// <summary>
 	/// Represents a collection of exactly one object. Provides special LINQ methods to write closure-like statements.
 	/// </summary>
 	/// <typeparam name="T">The type of value in the instance.</typeparam>
-	public sealed class One<T> : ICollection<T>, IDisposable {
+	public class One<T> : ICollection<T> {
 		// Internal value storage.
-		private readonly List<T> _list;
-		private readonly List<IDisposable> _disposables;
-		private readonly bool _doNotDisposeValueOnDispose;
+		protected readonly List<T> _list;
 
 		/// <summary>
 		/// Gets the single value stored in <see cref="One{T}"/>.
@@ -41,16 +34,8 @@ namespace System.Collections.Generic {
 		/// Initializes a new instance of the <see cref="One{T}"/> class that contains the specified value.
 		/// </summary>
 		/// <param name="value">The value to be stored in the <see cref="One{T}"/>. The value can be null for reference types.</param>
-		/// <param name="doNotDisposeValueOnDispose">true to let <see cref="One{T}"/> dispose value on disposing; false if you prefer to dispose it yourself.</param>
-		public One(T value, bool doNotDisposeValueOnDispose = false) {
+		public One(T value) {
 			_list = new List<T> { value };
-			_doNotDisposeValueOnDispose = doNotDisposeValueOnDispose;
-		}
-
-		private One(T value, params IDisposable[] disposables) {
-			_list = new List<T> { value };
-			_doNotDisposeValueOnDispose = false;
-			_disposables = disposables.ToList();
 		}
 
 		#region ICollection<T> implementation
@@ -100,180 +85,14 @@ namespace System.Collections.Generic {
 		IEnumerator IEnumerable.GetEnumerator() => _list.GetEnumerator();
 		#endregion
 
-		#region Linq operators
-		// Support for explicit range variable type.
-		// Example:
-		//   from T x in e
-		public One<TResult> Cast<TResult>() {
-			TResult resultValue;
-			try {
-				resultValue = (TResult)Convert.ChangeType(Value, typeof(TResult));
-			} catch {
-				Dispose();
-				throw;
-			}
-			return new One<TResult>(resultValue, this);
-		}
-
-		// Support for select clause.
-		// Example:
-		//   from x in e select x
-		public One<TResult> Select<TResult>(Func<T, TResult> selector) {
-			try {
-				return new One<TResult>(selector.Invoke(Value), this);
-			} catch {
-				Dispose();
-				throw;
-			}
-		}
-
-		// Support for second from clause.
-		// Example:
-		//   from x1 in e1
-		//   from x2 in e2
-		//   select v
-		public One<TResult> SelectMany<TCollection, TResult>(Func<T, One<TCollection>> collectionSelector, Func<T, TCollection, TResult> resultSelector) {
-			One<TCollection> collection;
-			try {
-				collection = collectionSelector.Invoke(Value);
-			} catch {
-				Dispose();
-				throw;
-			}
-			try {
-				return new One<TResult>(resultSelector.Invoke(Value, collection), collection, this);
-			} catch {
-				collection.Dispose();
-				Dispose();
-				throw;
-			}
-		}
-
-		// Support for join clause without into clause.
-		// Example:
-		//   from x1 in e1
-		//   join x2 in e2 on 1 equals 1
-		//   select v
-		public One<TResult> Join<TInner, TKey, TResult>(One<TInner> inner, Func<T, TKey> outerKeySelector, Func<TInner, TKey> innerKeySelector, Func<T, TInner, TResult> resultSelector) {
-			TInner innerValue = inner.Value;
-			bool keysAreEqual;
-			try {
-				TKey outerKey = outerKeySelector(Value);
-				TKey innerKey = innerKeySelector(innerValue);
-				keysAreEqual = EqualityComparer<TKey>.Default.Equals(outerKey, innerKey);
-			} catch {
-				inner.Dispose();
-				Dispose();
-				throw;
-			}
-			if (keysAreEqual) {
-				try {
-					return new One<TResult>(resultSelector.Invoke(Value, inner), inner, this);
-				} catch {
-					inner.Dispose();
-					Dispose();
-					throw;
-				}
-			} else {
-				inner.Dispose();
-				Dispose();
-				throw new InvalidOperationException($"Join clause on {typeof(One<T>).Name} must not produce empty result.");
-			}
-		}
-		#endregion
-
-		#region Invalid Linq operators
-		[Obsolete("Second from clause must also enumerate a One<T>.", error: true)]
-		public One<TResult> SelectMany<TCollection, TResult>(Func<T, IEnumerable<TCollection>> collectionSelector, Func<T, TCollection, TResult> resultSelector) => throw new InvalidOperationException($"Second from clause must also enumerate a One<T>.");
-
-		[Obsolete("Where clause is not allowed on One<T>.", error: true)]
-		public One<T> Where(Func<T, bool> predicate) => throw new InvalidOperationException($"Where clause is not allowed on {typeof(One<T>).Name}.");
-
-		[Obsolete("OrderBy clause is not allowed on One<T>.", error: true)]
-		public One<T> OrderBy<TKey>(Func<T, TKey> keySelector) => throw new InvalidOperationException($"OrderBy clause is not allowed on {typeof(One<T>).Name}.");
-
-		[Obsolete("OrderByDescending clause is not allowed on One<T>.", error: true)]
-		public One<T> OrderByDescending<TKey>(Func<T, TKey> keySelector) => throw new InvalidOperationException($"OrderByDescending clause is not allowed on {typeof(One<T>).Name}.");
-
-		[Obsolete("GroupJoin clause is not allowed on One<T>.", error: true)]
-		public One<TResult> GroupJoin<TInner, TKey, TResult>(One<TInner> inner, Func<T, TKey> outerKeySelector, Func<TInner, TKey> innerKeySelector, Func<T, One<TInner>, TResult> resultSelector) => throw new InvalidOperationException($"GroupJoin clause is not allowed on {typeof(One<T>).Name}.");
-
-		[Obsolete("Join clause must enumerate a One<T>.", error: true)]
-		public One<TInner> Join<TInner, TKey>(IEnumerable<TInner> inner, Func<T, TKey> outerKeySelector, Func<TInner, TKey> innerKeySelector, Func<T, TInner, T> resultSelector) => throw new InvalidOperationException($"Join clause on {typeof(One<T>).Name} must enumerate a One<T>.");
-
-		[Obsolete("GroupBy clause is not allowed on One<T>.", error: true)]
-		public IEnumerable<IGrouping<TKey, T>> GroupBy<TKey>(Func<T, TKey> keySelector) => throw new InvalidOperationException($"GroupBy clause is not allowed on {typeof(One<T>).Name}.");
-
-		[Obsolete("GroupBy clause is not allowed on One<T>.", error: true)]
-		public IEnumerable<IGrouping<TKey, TElement>> GroupBy<TKey, TElement>(Func<T, TKey> keySelector, Func<T, TElement> elementSelector) => throw new InvalidOperationException($"GroupBy clause is not allowed on {typeof(One<T>).Name}.");
-		#endregion
+		protected virtual T UnboxValue() => Value;
 
 		/// <summary>
 		/// Implicitly converts <see cref="One{T}"/> to value stored in the <see cref="One{T}"/>.
 		/// </summary>
 		/// <param name="one">The <see cref="One{T}"/> to be converted.</param>
 		public static implicit operator T(One<T> one) {
-			one.DisposeDisposableValueOnly();
-			return one.Value;
+			return one.UnboxValue();
 		}
-
-		#region IDisposable Support
-		private bool disposedValue = false; // To detect redundant calls
-
-		void Dispose(bool disposing) {
-			if (!disposedValue) {
-				if (disposing) {
-					// dispose managed state (managed objects).
-					if (_disposables != null && _disposables.Any()) {
-						foreach (IDisposable disposable in _disposables) {
-							disposable.Dispose();
-						}
-						_disposables.Clear();
-					}
-					if (!_doNotDisposeValueOnDispose) {
-						if (Value is IDisposable disposableValue) {
-							try {
-								disposableValue.Dispose();
-							} catch (ObjectDisposedException) { }
-						} else if (Value != null && Value.GetType() is Type type && IsAnonymousType(type)) {
-							foreach (PropertyInfo propertyInfo in type.GetTypeInfo().GetProperties().Reverse().Take(1)) {
-								if (propertyInfo.PropertyType.GetInterfaces().Contains(typeof(IDisposable)) &&
-									propertyInfo.GetValue(Value) is IDisposable disposable) {
-									disposable.Dispose();
-								}
-							}
-						}
-					}
-				}
-
-				disposedValue = true;
-			}
-		}
-
-		void DisposeDisposableValueOnly() {
-			if (!disposedValue) {
-				if (_disposables != null && _disposables.Any()) {
-					foreach (IDisposable disposable in _disposables) {
-						disposable.Dispose();
-					}
-					_disposables.Clear();
-				}
-				disposedValue = true;
-			}
-		}
-
-		// This code added to correctly implement the disposable pattern.
-		public void Dispose() {
-			// Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-			Dispose(true);
-		}
-
-		private static bool IsAnonymousType(Type type) {
-			return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false)
-				&& type.IsGenericType && type.Name.Contains("AnonymousType")
-				&& (type.Name.StartsWith("<>") || type.Name.StartsWith("VB$"))
-				&& type.Attributes.HasFlag(TypeAttributes.NotPublic);
-		}
-		#endregion
 	}
 }
