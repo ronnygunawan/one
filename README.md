@@ -59,7 +59,7 @@ let y = 10
 Introduce a new range variable from another One&lt;T&gt;
 ```csharp
 from x in One.Value(e)
-from y in one // one is a One<int>, z is an Int32
+from y in one // one is a One<int>, y is an Int32
 ```
 
 Implicitly cast qlosure to its final value
@@ -99,7 +99,7 @@ string json = from client in One.Value(httpClient).DoNotDisposeValue()
 ```csharp
 Person person = await from response in httpClient.GetAsync(uri)
                       from json in response.Content.ReadAsStringAsync()
-                      select JsonConvert<Person>(json);
+                      select JsonConvert.DeserializeObject<Person>(json);
 ```
 
 Please submit an issue if you need to report bugs or request a feature.
