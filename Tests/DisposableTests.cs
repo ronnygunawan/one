@@ -7,8 +7,8 @@ namespace Tests {
 	public class DisposableTests {
 		[Fact]
 		public void LinqClosureDisposesAllAllocatedResourcesOnSelect() {
-			DummyResource1 resource1 = new DummyResource1("Foo");
-			DummyResource2 resource2 = new DummyResource2("Bar");
+			DummyResource1 resource1 = new("Foo");
+			DummyResource2 resource2 = new("Bar");
 			DummyResource3 resource3Ref = null;
 			DummyResource4 resource4Ref = null;
 

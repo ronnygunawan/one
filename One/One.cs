@@ -4,11 +4,6 @@
 	/// </summary>
 	public static class One {
 		/// <summary>
-		/// Gets an instance of <see cref="One{T}"/> class that contains a single null value.
-		/// </summary>
-		public static One<object> Null { get; } = new One<object>(null);
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="One{T}"/> class that contains the specified value.
 		/// </summary>
 		/// <typeparam name="TValue">The type of value in the instance.</typeparam>

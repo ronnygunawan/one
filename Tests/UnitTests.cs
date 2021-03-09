@@ -23,9 +23,6 @@ namespace Tests {
 
 		[Fact]
 		public void OneCanBeCreatedUsingFactory() {
-			One<object> oneNull = One.Null;
-			oneNull.Value.Should().BeNull();
-
 			One<string> oneString = One.Value("Hello world");
 			oneString.Value.Should().Be("Hello world");
 		}
