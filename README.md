@@ -1,11 +1,14 @@
-# Release Notes
+# One
+[![NuGet](https://img.shields.io/nuget/v/RG.System.Collections.Generic.One.svg)](https://www.nuget.org/packages/RG.System.Collections.Generic.One/) [![.NET](https://github.com/ronnygunawan/one/actions/workflows/dotnet.yml/badge.svg)](https://github.com/ronnygunawan/one/actions/workflows/dotnet.yml)
+
+## Release Notes
 ### Version 1.0.3
 Added `.AsOne()` extension method
 
-# What is One&lt;T&gt;?
+## What is One&lt;T&gt;?
 One&lt;T&gt; is a generic collection that contains exactly one item. This kind of generic collection allows you to use LINQ expression to write closures and functional programming.
 
-# Installation
+## Installation
 Using Package Manager Console
 ```
 Install-Package RG.System.Collections.Generic.One
@@ -15,7 +18,7 @@ Using dotnet CLI
 dotnet add package RG.System.Collections.Generic.One
 ```
 
-# Usage
+## Usage
 Include using directive
 ```csharp
 using System.Collections.Generic;
@@ -38,7 +41,7 @@ decimal total = from price in 199m.AsOne()
                 select subtotal + tax - discount;
 ```
 
-# Qlosure&lt;T&gt;: Closures Written in LINQ
+## Qlosure&lt;T&gt;: Closures Written in LINQ
 You can write closures in LINQ by enumerating from a One&lt;T&gt; or a Qlosure&lt;T&gt;.
 
 Start a qlosure
@@ -65,7 +68,7 @@ int result = from x in e.AsOne()
              select y;
 ```
 
-# Auto Disposing Range Variables
+## Auto Disposing Range Variables
 All disposable range variables are automatically disposed before stepping into next statement.
 ```csharp
 string ComputeSecretProof(string accessToken) {
@@ -81,7 +84,7 @@ string ComputeSecretProof(string accessToken) {
                      
 ```
 
-# Disabling Auto Dispose
+## Disabling Auto Dispose
 ```csharp
 string json = from client in httpClient.AsOne().DoNotDisposeValue()
               let uri = new Uri(uriString)
@@ -89,7 +92,7 @@ string json = from client in httpClient.AsOne().DoNotDisposeValue()
 // httpClient is not disposed and can still be reused
 ```
 
-# Planned Features
+## Planned Features
 1. Full NRT Support
 2. Task Chaining
 ```csharp
