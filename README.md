@@ -1,4 +1,4 @@
-# One<T> : IEnumerable<T>
+# One&lt;T&gt; : IEnumerable&lt;T&gt;
 [![NuGet](https://img.shields.io/nuget/v/RG.System.Collections.Generic.One.svg)](https://www.nuget.org/packages/RG.System.Collections.Generic.One/) [![.NET](https://github.com/ronnygunawan/one/actions/workflows/dotnet.yml/badge.svg)](https://github.com/ronnygunawan/one/actions/workflows/dotnet.yml)
 
 ## Release Notes
