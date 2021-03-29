@@ -41,6 +41,16 @@ decimal total = from price in 199m.AsOne()
                 select subtotal + tax - discount;
 ```
 
+### New in 1.0.4
+
+You can now explicitly specify type of range variable to implicitly treat the source as a `One<T>`
+
+```csharp
+decimal total = from decimal price in 199m
+                let discount = 10m
+                select price - discount;
+```
+
 ## Qlosure&lt;T&gt;: Closures Written in LINQ
 You can write closures in LINQ by enumerating from a One&lt;T&gt; or a Qlosure&lt;T&gt;.
 

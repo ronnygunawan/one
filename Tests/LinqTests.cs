@@ -36,7 +36,7 @@ namespace Tests {
 									return Convert.ToBase64String(cipherTextBytes);
  								});
 
-			string decryptedText = from saltedCipherTextBytes in One.Value(Convert.FromBase64String(cipherText))
+			string decryptedText = from byte[] saltedCipherTextBytes in Convert.FromBase64String(cipherText)
 								   let keySize = 128
 								   let saltBytes = saltedCipherTextBytes.Take(keySize / 8).ToArray()
 								   let ivBytes = saltedCipherTextBytes.Skip(keySize / 8).Take(keySize / 8).ToArray()
