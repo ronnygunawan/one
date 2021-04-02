@@ -1,8 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace System.Collections.Generic {
+namespace System.Linq {
 	public class Qlosure<T> : One<T>, IDisposable {
 		protected List<IDisposable> _disposables;
 
@@ -111,7 +111,7 @@ namespace System.Collections.Generic {
 		#region IDisposable Support
 		private bool disposedValue = false; // To detect redundant calls
 
-		void Dispose(bool disposing, bool alsoDisposeValue) {
+		private void Dispose(bool disposing, bool alsoDisposeValue) {
 			if (!disposedValue) {
 				if (disposing) {
 					// dispose managed state (managed objects).

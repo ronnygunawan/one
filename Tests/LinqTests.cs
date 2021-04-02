@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -14,7 +13,7 @@ namespace Tests {
 			const string plainText = "The quick brown fox jumps over the lazy dog.";
 			const string password = "Lorem ipsum";
 
-			string cipherText = from plainTextBytes in One.Value(Encoding.UTF8.GetBytes(plainText))
+			string cipherText = from byte[] plainTextBytes in Encoding.UTF8.GetBytes(plainText)
 								let keySize = 128
 								let rng = new RNGCryptoServiceProvider()
 								let saltBytes = new byte[16].Also(it => rng.GetBytes(it))

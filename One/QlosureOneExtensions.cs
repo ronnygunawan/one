@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 
-namespace System.Collections.Generic {
+namespace System.Linq {
 	public static class QlosureOneExtensions {
 		public static Qlosure<T> ToQlosure<T>(this One<T> one) {
 			return new Qlosure<T>(one.Value);

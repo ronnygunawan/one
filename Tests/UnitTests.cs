@@ -1,22 +1,23 @@
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Tests {
 	public class UnitTests {
 		[Fact]
 		public void OneCanBeCreatedUsingConstructor() {
-			One<int> oneInt = new One<int>(1);
+			One<int> oneInt = new(1);
 			oneInt.Value.Should().Be(1);
 
-			One<string> oneString = new One<string>("Hello world");
+			One<string> oneString = new("Hello world");
 			oneString.Value.Should().Be("Hello world");
 
-			One<(int, int)> oneTuple = new One<(int, int)>((1, 2));
+			One<(int, int)> oneTuple = new((1, 2));
 			oneTuple.Value.Should().Be((1, 2));
 
-			One<KeyValuePair<string, decimal>> oneKeyValuePair = new One<KeyValuePair<string, decimal>>(new KeyValuePair<string, decimal>("iPhone X", 599m));
+			One<KeyValuePair<string, decimal>> oneKeyValuePair = new(new KeyValuePair<string, decimal>("iPhone X", 599m));
 			oneKeyValuePair.Value.Key.Should().Be("iPhone X");
 			oneKeyValuePair.Value.Value.Should().Be(599m);
 		}
