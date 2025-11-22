@@ -103,15 +103,16 @@ namespace System.Linq {
 		public Qlosure<Task<TResult>> SelectMany<TCollection, TResult>(Func<T, Task<TCollection>> collectionSelector, Func<T, TCollection, TResult> resultSelector) {
 			try {
 				Task<TCollection> collectionTask = collectionSelector.Invoke(Value);
-				Task<TResult> resultTask = collectionTask.ContinueWith(task => {
+				async Task<TResult> AsyncSelectMany() {
 					try {
-						return resultSelector.Invoke(Value, task.Result);
+						TCollection collectionValue = await collectionTask.ConfigureAwait(false);
+						return resultSelector.Invoke(Value, collectionValue);
 					} catch {
 						Dispose();
 						throw;
 					}
-				}, TaskContinuationOptions.OnlyOnRanToCompletion);
-				return new Qlosure<Task<TResult>>(resultTask, this);
+				}
+				return new Qlosure<Task<TResult>>(AsyncSelectMany(), this);
 			} catch {
 				Dispose();
 				throw;

@@ -33,8 +33,11 @@ namespace System.Linq {
 		/// <param name="selector">The selector function.</param>
 		/// <returns>A qlosure containing the result task.</returns>
 		public static Qlosure<Task<TResult>> Select<TSource, TResult>(this Task<TSource> task, Func<TSource, TResult> selector) {
-			Task<TResult> resultTask = task.ContinueWith(t => selector.Invoke(t.Result), TaskContinuationOptions.OnlyOnRanToCompletion);
-			return new Qlosure<Task<TResult>>(resultTask);
+			async Task<TResult> AsyncSelect() {
+				TSource sourceValue = await task.ConfigureAwait(false);
+				return selector.Invoke(sourceValue);
+			}
+			return new Qlosure<Task<TResult>>(AsyncSelect());
 		}
 
 		/// <summary>
@@ -51,15 +54,13 @@ namespace System.Linq {
 			this Task<TSource> task,
 			Func<TSource, Task<TCollection>> collectionSelector,
 			Func<TSource, TCollection, TResult> resultSelector) {
-			Task<TResult> resultTask = task.ContinueWith(sourceTask => {
-				TSource sourceValue = sourceTask.Result;
+			async Task<TResult> AsyncSelectMany() {
+				TSource sourceValue = await task.ConfigureAwait(false);
 				Task<TCollection> collectionTask = collectionSelector.Invoke(sourceValue);
-				return collectionTask.ContinueWith(collectionTaskResult => {
-					TCollection collectionValue = collectionTaskResult.Result;
-					return resultSelector.Invoke(sourceValue, collectionValue);
-				}, TaskContinuationOptions.OnlyOnRanToCompletion);
-			}, TaskContinuationOptions.OnlyOnRanToCompletion).Unwrap();
-			return new Qlosure<Task<TResult>>(resultTask);
+				TCollection collectionValue = await collectionTask.ConfigureAwait(false);
+				return resultSelector.Invoke(sourceValue, collectionValue);
+			}
+			return new Qlosure<Task<TResult>>(AsyncSelectMany());
 		}
 
 		/// <summary>
@@ -76,15 +77,13 @@ namespace System.Linq {
 			this Qlosure<Task<TSource>> qlosure,
 			Func<TSource, Task<TCollection>> collectionSelector,
 			Func<TSource, TCollection, TResult> resultSelector) {
-			Task<TResult> resultTask = qlosure.Value.ContinueWith(sourceTask => {
-				TSource sourceValue = sourceTask.Result;
+			async Task<TResult> AsyncSelectMany() {
+				TSource sourceValue = await qlosure.Value.ConfigureAwait(false);
 				Task<TCollection> collectionTask = collectionSelector.Invoke(sourceValue);
-				return collectionTask.ContinueWith(collectionTaskResult => {
-					TCollection collectionValue = collectionTaskResult.Result;
-					return resultSelector.Invoke(sourceValue, collectionValue);
-				}, TaskContinuationOptions.OnlyOnRanToCompletion);
-			}, TaskContinuationOptions.OnlyOnRanToCompletion).Unwrap();
-			return new Qlosure<Task<TResult>>(resultTask, qlosure);
+				TCollection collectionValue = await collectionTask.ConfigureAwait(false);
+				return resultSelector.Invoke(sourceValue, collectionValue);
+			}
+			return new Qlosure<Task<TResult>>(AsyncSelectMany(), qlosure);
 		}
 	}
 }
