@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace System.Linq {
 	public class Qlosure<T> : One<T>, IDisposable {
@@ -88,6 +89,29 @@ namespace System.Linq {
 			try {
 				One<TCollection> collection = collectionSelector.Invoke(Value);
 				return new Qlosure<TResult>(resultSelector.Invoke(Value, collection.Value), this);
+			} catch {
+				Dispose();
+				throw;
+			}
+		}
+
+		// Support for async task chaining.
+		// Example:
+		//   from response in httpClient.GetAsync(uri)
+		//   from json in response.Content.ReadAsStringAsync()
+		//   select json
+		public Qlosure<Task<TResult>> SelectMany<TCollection, TResult>(Func<T, Task<TCollection>> collectionSelector, Func<T, TCollection, TResult> resultSelector) {
+			try {
+				Task<TCollection> collectionTask = collectionSelector.Invoke(Value);
+				Task<TResult> resultTask = collectionTask.ContinueWith(task => {
+					try {
+						return resultSelector.Invoke(Value, task.Result);
+					} catch {
+						Dispose();
+						throw;
+					}
+				}, TaskContinuationOptions.OnlyOnRanToCompletion);
+				return new Qlosure<Task<TResult>>(resultTask, this);
 			} catch {
 				Dispose();
 				throw;
