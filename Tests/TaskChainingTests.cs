@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -14,7 +14,7 @@ namespace Tests {
 			                   from doubled in DoubleAsync(num)
 			                   select doubled;
 
-			result.Should().Be(84);
+			result.ShouldBe(84);
 		}
 
 		[Fact]
@@ -24,7 +24,7 @@ namespace Tests {
 			                   from added in AddTenAsync(doubled)
 			                   select added;
 
-			result.Should().Be(94);
+			result.ShouldBe(94);
 		}
 
 		[Fact]
@@ -33,7 +33,7 @@ namespace Tests {
 			                   from str in ConvertToStringAsync(num)
 			                   select str;
 
-			result.Should().Be("42");
+			result.ShouldBe("42");
 		}
 
 		[Fact]
@@ -42,7 +42,7 @@ namespace Tests {
 			                   from doubled in DoubleAsync(num)
 			                   select doubled * 2;
 
-			result.Should().Be(168);
+			result.ShouldBe(168);
 		}
 
 		[Fact]
@@ -56,8 +56,8 @@ namespace Tests {
 			                   from json in GetJsonFromResponseAsync(response)
 			                   select ParsePerson(json);
 
-			person.Name.Should().Be("John Doe");
-			person.Age.Should().Be(30);
+			person.Name.ShouldBe("John Doe");
+			person.Age.ShouldBe(30);
 		}
 
 		private static Task<int> GetNumberAsync() {

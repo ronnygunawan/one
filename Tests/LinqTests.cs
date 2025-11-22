@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using System;
 using System.IO;
 using System.Linq;
@@ -56,7 +56,7 @@ namespace Tests {
 									   return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
 								   });
 
-			decryptedText.Should().Be(plainText);
+			decryptedText.ShouldBe(plainText);
 		}
 	}
 }
