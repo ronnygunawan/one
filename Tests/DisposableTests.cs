@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +19,12 @@ namespace Tests {
 							let res4 = resource4Ref = new DummyResource4("Akwoakoawk")
 							let temp = $"{res3.Text} {res4.Text}"
 							select $"{res1.Text} {res2.Text} {temp}";
-			result.Should().Be("Foo Bar Wkwk Akwoakoawk");
+			result.ShouldBe("Foo Bar Wkwk Akwoakoawk");
 
-			resource1.Disposed.Should().BeTrue();
-			resource2.Disposed.Should().BeTrue();
-			resource3Ref.Disposed.Should().BeTrue();
-			resource4Ref.Disposed.Should().BeTrue();
+			resource1.Disposed.ShouldBeTrue();
+			resource2.Disposed.ShouldBeTrue();
+			resource3Ref.Disposed.ShouldBeTrue();
+			resource4Ref.Disposed.ShouldBeTrue();
 		}
 
 		private abstract class DummyResource : IDisposable {

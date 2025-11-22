@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using System;
 using System.IO;
 using System.Linq;
@@ -51,12 +51,12 @@ namespace Tests {
 								   let memoryStream = new MemoryStream(cipherTextBytes)
 								   let cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read)
 								   select cryptoStream.Let(cryptoStream => {
-									   var plainTextBytes = new byte[cipherTextBytes.Length];
-									   var decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
-									   return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
+									   using var resultStream = new MemoryStream();
+									   cryptoStream.CopyTo(resultStream);
+									   return Encoding.UTF8.GetString(resultStream.ToArray());
 								   });
 
-			decryptedText.Should().Be(plainText);
+			decryptedText.ShouldBe(plainText);
 		}
 	}
 }
