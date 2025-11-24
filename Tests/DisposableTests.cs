@@ -27,6 +27,19 @@ namespace Tests {
 			resource4Ref!.Disposed.ShouldBeTrue();
 		}
 
+		[Fact]
+		public void OneCanContainNullableType() {
+			// Test that One<T?> properly handles nullable types without direct assignment to non-nullable
+			One<string?> nullableString = One.Value<string?>(null);
+			nullableString.Value.ShouldBeNull();
+
+			One<int?> nullableInt = One.Value<int?>(null);
+			nullableInt.Value.ShouldBeNull();
+
+			One<int?> nonNullInt = One.Value<int?>(42);
+			nonNullInt.Value.ShouldBe(42);
+		}
+
 		private abstract class DummyResource : IDisposable {
 			protected readonly string _text;
 			public string Text {
