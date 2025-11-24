@@ -105,4 +105,12 @@ string json = from client in httpClient.AsOne().DoNotDisposeValue()
 // httpClient is not disposed and can still be reused
 ```
 
+## Task Chaining
+Task chaining allows you to use LINQ syntax with async operations.
+```csharp
+Person person = await from response in httpClient.GetAsync(uri)
+                      from json in response.Content.ReadAsStringAsync()
+                      select JsonConvert.DeserializeObject<Person>(json);
+```
+
 Please submit an issue if you need to report bugs or request a feature.
