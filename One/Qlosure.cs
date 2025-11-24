@@ -15,7 +15,7 @@ namespace System.Linq {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Qlosure{T}"/>.
 		/// </summary>
-		/// <param name="value">The value to be stored in the <see cref="Qlosure{T}"/>.</param>
+		/// <param name="value">The value to be stored in the <see cref="Qlosure{T}"/>. The value can be null for both reference types and nullable value types.</param>
 		public Qlosure(T value) : base(value) { }
 
 		public Qlosure(T value, params IDisposable[] disposables) : base(value) {

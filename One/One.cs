@@ -7,7 +7,7 @@
 		/// Initializes a new instance of the <see cref="One{T}"/> class that contains the specified value.
 		/// </summary>
 		/// <typeparam name="TValue">The type of value in the instance.</typeparam>
-		/// <param name="value">The value to be stored in the <see cref="One{T}"/>.</param>
+		/// <param name="value">The value to be stored in the <see cref="One{T}"/>. The value can be null for both reference types and nullable value types.</param>
 		/// <returns>A new instance of <see cref="One{T}"/> that contains the specified value.</returns>
 		public static One<TValue> Value<TValue>(TValue value) => new One<TValue>(value);
 	}
@@ -28,7 +28,7 @@
 		/// <summary>
 		/// Initializes a new instance of the <see cref="One{T}"/> class that contains the specified value.
 		/// </summary>
-		/// <param name="value">The value to be stored in the <see cref="One{T}"/>.</param>
+		/// <param name="value">The value to be stored in the <see cref="One{T}"/>. The value can be null for both reference types and nullable value types.</param>
 		public One(T value) {
 			_list = new List<T> { value };
 		}
