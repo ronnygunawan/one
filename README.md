@@ -2,6 +2,9 @@
 [![NuGet](https://img.shields.io/nuget/v/RG.System.Collections.Generic.One.svg)](https://www.nuget.org/packages/RG.System.Collections.Generic.One/) [![.NET](https://github.com/ronnygunawan/one/actions/workflows/dotnet.yml/badge.svg)](https://github.com/ronnygunawan/one/actions/workflows/dotnet.yml)
 
 ## Release Notes
+### Version 2.0.1
+Added task chaining support
+
 ### Version 1.0.3
 Added `.AsOne()` extension method
 
@@ -102,9 +105,8 @@ string json = from client in httpClient.AsOne().DoNotDisposeValue()
 // httpClient is not disposed and can still be reused
 ```
 
-## Planned Features
-1. Full NRT Support
-2. Task Chaining
+## Task Chaining
+Task chaining allows you to use LINQ syntax with async operations.
 ```csharp
 Person person = await from response in httpClient.GetAsync(uri)
                       from json in response.Content.ReadAsStringAsync()
