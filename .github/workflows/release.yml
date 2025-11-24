@@ -30,16 +30,11 @@ jobs:
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "Extracted version: $VERSION"
     
-    - name: Update project version
-      run: |
-        sed -i "s|<Version>.*</Version>|<Version>${{ steps.get_version.outputs.version }}</Version>|g" One/System.Collections.Generic.One.csproj
-        cat One/System.Collections.Generic.One.csproj
-    
     - name: Restore dependencies
       run: dotnet restore
     
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build --no-restore --configuration Release -p:Version=${{ steps.get_version.outputs.version }}
     
     - name: Test
       run: dotnet test --no-build --configuration Release
@@ -48,4 +43,6 @@ jobs:
       run: dotnet pack --no-build --configuration Release --output ./artifacts
     
     - name: Publish to NuGet
-      run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push ./artifacts/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
