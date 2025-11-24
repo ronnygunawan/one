@@ -10,8 +10,8 @@ namespace Tests {
 		public void LinqClosureDisposesAllAllocatedResourcesOnSelect() {
 			DummyResource1 resource1 = new("Foo");
 			DummyResource2 resource2 = new("Bar");
-			DummyResource3 resource3Ref = null;
-			DummyResource4 resource4Ref = null;
+			DummyResource3? resource3Ref = null;
+			DummyResource4? resource4Ref = null;
 
 			string result = from res1 in One.Value(resource1)
 							from res2 in One.Value(resource2)
@@ -23,9 +23,36 @@ namespace Tests {
 
 			resource1.Disposed.ShouldBeTrue();
 			resource2.Disposed.ShouldBeTrue();
+			resource3Ref.ShouldNotBeNull();
 			resource3Ref.Disposed.ShouldBeTrue();
+			resource4Ref.ShouldNotBeNull();
 			resource4Ref.Disposed.ShouldBeTrue();
 		}
+
+		[Fact]
+		public void OneCanContainNullableType() {
+			// Test that One<T?> properly handles nullable types without direct assignment to non-nullable
+			One<string?> nullableString = One.Value<string?>(null);
+			nullableString.Value.ShouldBeNull();
+
+			One<int?> nullableInt = One.Value<int?>(null);
+			nullableInt.Value.ShouldBeNull();
+
+			One<int?> nonNullInt = One.Value<int?>(42);
+			nonNullInt.Value.ShouldBe(42);
+		}
+
+		[Fact]
+		public void OneWithRecordAndNullConditionalOperators() {
+			// Test that One works with records and null-conditional operators
+			var result = from foo in new Foo(null).AsOne()
+						 let length = foo.Name?.Length
+						 select length?.ToString();
+			
+			result.Value.ShouldBeNull();
+		}
+
+		private record Foo(string? Name);
 
 		private abstract class DummyResource : IDisposable {
 			protected readonly string _text;
