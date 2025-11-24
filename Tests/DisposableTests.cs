@@ -10,8 +10,8 @@ namespace Tests {
 		public void LinqClosureDisposesAllAllocatedResourcesOnSelect() {
 			DummyResource1 resource1 = new("Foo");
 			DummyResource2 resource2 = new("Bar");
-			DummyResource3 resource3Ref = null;
-			DummyResource4 resource4Ref = null;
+			DummyResource3? resource3Ref = null;
+			DummyResource4? resource4Ref = null;
 
 			string result = from res1 in One.Value(resource1)
 							from res2 in One.Value(resource2)
@@ -23,8 +23,8 @@ namespace Tests {
 
 			resource1.Disposed.ShouldBeTrue();
 			resource2.Disposed.ShouldBeTrue();
-			resource3Ref.Disposed.ShouldBeTrue();
-			resource4Ref.Disposed.ShouldBeTrue();
+			resource3Ref!.Disposed.ShouldBeTrue();
+			resource4Ref!.Disposed.ShouldBeTrue();
 		}
 
 		private abstract class DummyResource : IDisposable {

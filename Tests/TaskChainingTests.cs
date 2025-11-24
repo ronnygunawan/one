@@ -100,15 +100,15 @@ namespace Tests {
 		}
 
 		private class MockHttpResponse {
-			public MockHttpContent Content { get; set; }
+			public MockHttpContent Content { get; set; } = null!;
 		}
 
 		private class MockHttpContent {
-			public string Data { get; set; }
+			public string Data { get; set; } = null!;
 		}
 
 		private class Person {
-			public string Name { get; set; }
+			public string Name { get; set; } = null!;
 			public int Age { get; set; }
 		}
 	}
