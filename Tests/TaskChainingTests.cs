@@ -83,7 +83,7 @@ namespace Tests {
 		}
 
 		private static Task<string> GetJsonFromResponseAsync(MockHttpResponse response) {
-			return Task.FromResult(response.Content!.Data!);
+			return Task.FromResult(response.Content.Data);
 		}
 
 		private static Person ParsePerson(string json) {
@@ -100,11 +100,11 @@ namespace Tests {
 		}
 
 		private class MockHttpResponse {
-			public MockHttpContent? Content { get; set; }
+			public required MockHttpContent Content { get; set; }
 		}
 
 		private class MockHttpContent {
-			public string? Data { get; set; }
+			public required string Data { get; set; }
 		}
 
 		private class Person {

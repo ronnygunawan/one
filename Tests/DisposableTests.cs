@@ -23,8 +23,10 @@ namespace Tests {
 
 			resource1.Disposed.ShouldBeTrue();
 			resource2.Disposed.ShouldBeTrue();
-			resource3Ref!.Disposed.ShouldBeTrue();
-			resource4Ref!.Disposed.ShouldBeTrue();
+			resource3Ref.ShouldNotBeNull();
+			resource3Ref.Disposed.ShouldBeTrue();
+			resource4Ref.ShouldNotBeNull();
+			resource4Ref.Disposed.ShouldBeTrue();
 		}
 
 		[Fact]
@@ -39,6 +41,18 @@ namespace Tests {
 			One<int?> nonNullInt = One.Value<int?>(42);
 			nonNullInt.Value.ShouldBe(42);
 		}
+
+		[Fact]
+		public void OneWithRecordAndNullConditionalOperators() {
+			// Test that One works with records and null-conditional operators
+			var result = from foo in new Foo(null).AsOne()
+						 let length = foo.Name?.Length
+						 select length?.ToString();
+			
+			result.Value.ShouldBeNull();
+		}
+
+		private record Foo(string? Name);
 
 		private abstract class DummyResource : IDisposable {
 			protected readonly string _text;
